@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday 🎂</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="container">
+    <h1>🎉 Happy Birthday, Priya! 🎂</h1>
+    <p>You are the most special person in my life ❤️</p>
+    <button onclick="startCelebration()">Tap for Surprise 🎁</button>
+  </div>
+
+  <audio id="birthdaySong" loop>
+    <source src="https://www2.cs.uic.edu/~i101/SoundFiles/HappyBirthday.mid" type="audio/midi">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow: hidden;
+  text-align: center;
+  color: white;
+}
+
+.container {
+  position: relative;
+  top: 40vh;
+  transform: translateY(-50%);
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  background: white;
+  color: #ff4e8d;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+}
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let confetti = [];
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function createConfetti() {
+  for (let i = 0; i < 200; i++) {
+    confetti.push({
+      x: random(0, canvas.width),
+      y: random(-canvas.height, 0),
+      size: random(5, 10),
+      speed: random(2, 5),
+      color: `hsl(${random(0, 360)}, 100%, 50%)`
+    });
+  }
+}
+
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  confetti.forEach(c => {
+    ctx.fillStyle = c.color;
+    ctx.fillRect(c.x, c.y, c.size, c.size);
+    c.y += c.speed;
+
+    if (c.y > canvas.height) {
+      c.y = -10;
+      c.x = random(0, canvas.width);
+    }
+  });
+
+  requestAnimationFrame(drawConfetti);
+}
+
+function startCelebration() {
+  document.getElementById("birthdaySong").play();
+  createConfetti();
+  drawConfetti();
+}
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
